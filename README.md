@@ -1,6 +1,8 @@
 ##### DND Atmospheric Music Bot #####
+Install
+npm install
 
-Playlists stolen from reddit.
+then node index.js
 Commands:
     - !list <themes | areas | moods> (keywords)
         ~Returns list of respective playlists, by most common keyword
