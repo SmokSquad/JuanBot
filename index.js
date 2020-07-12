@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
+const { prefix, token, spotifyCreds } = require('./config.json');
+const request = require('request-promise');
 
 
 const client = new Discord.Client();
@@ -13,6 +14,7 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
+	handleSpotify();
 });
 
 client.on('message', message => {
@@ -38,6 +40,31 @@ async function sendResponse(message, args){
 	const msg = await command.execute(message, args); //wait for promise (if there is one)
 
 	message.channel.send(msg);
+}
+
+async function handleSpotify(){
+	var options = {
+		method: 'POST',
+		uri: 'https://accounts.spotify.com/api/token',
+		form: {
+			'grant_type': 'client_credentials'
+		},
+		headers: {
+			'Authorization': 'Basic '+spotifyCreds
+		}
+	};
+
+	request(options)
+	.then(function (body) {
+		global.spotifyToken = JSON.parse(body).access_token;
+		console.log('Retrieved new spotify token');
+		setInterval(handleSpotify, 840000);
+	})
+	.catch(function (err) {
+		console.log('Fatal spotify error - Couldnt retrieve auth token');
+		handleSpotify();
+	});
+
 }
 
 client.login(token);

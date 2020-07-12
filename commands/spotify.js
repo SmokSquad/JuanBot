@@ -1,18 +1,19 @@
 module.exports = {
-	name: 'curl',
-	description: 'it curls',
+	name: 'spotify',
+	description: 'query spotify for metadata',
 	execute(message, args){
         const request = require('request-promise');
+        const { spotifyCreds } = require('../config.json');
 
         var options = {
-            uri: (args[0] != null ? args[0] : 'https://postman-echo.com/get'),
-            /*qs: { //query strings, key: value
-                foo: 'bar'
-            },*/
-            headers: {
-                'User-Agent': 'JuanBot'
+            method: 'POST',
+            uri: 'https://accounts.spotify.com/api/token',
+            form: {
+                'grant_type': 'client_credentials'
             },
-            json: true //return response as a json object - thanks request-promise
+            headers: {
+                'Authorization': 'Basic '+spotifyCreds
+            }
         };
 
         //initializes promise return, calls request
@@ -21,7 +22,7 @@ module.exports = {
             request(options)
             .then(function (body) {
                 console.log(body);
-                msg(JSON.stringify(body));
+                msg(body);
             })
             .catch(function (err) {
                 msg('error');

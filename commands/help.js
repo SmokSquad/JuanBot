@@ -17,7 +17,9 @@ module.exports = {
                 case 'play':
                     returnString += "!play\n\n If no arguments provided: Plays / resumes your last played playlist."
                     break;
-
+                case 'meta':
+                    returnString += "returns the meta info of a spotify playlist. Eg: !meta https://open.spotify.com/playlist/6ncAGSZ6ltRGaWflvQw2FC?si=ayODGOesQRyNPxr3RZzNjg"
+                    break;
                 default:
 
             }
