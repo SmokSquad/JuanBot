@@ -5,6 +5,8 @@ const request = require('request-promise');
 
 
 const client = new Discord.Client();
+
+//Gather commands from ./commands dir
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -42,6 +44,10 @@ async function sendResponse(message, args){
 	message.channel.send(msg);
 }
 
+/////
+// Function to handle re-authing with the spotify api
+// Calls every 14 minutes
+/////
 async function handleSpotify(){
 	var options = {
 		method: 'POST',
@@ -56,16 +62,15 @@ async function handleSpotify(){
 
 	request(options)
 	.then(function (body) {
-		global.spotifyToken = JSON.parse(body).access_token;
+		global.spotifyToken = JSON.parse(body).access_token; //Set global var with retrieved token
 		console.log('Retrieved new spotify token');
-		setInterval(handleSpotify, 840000);
+		setInterval(handleSpotify, 840000); //Handle 
 	})
 	.catch(function (err) {
-		console.log('Fatal spotify error - Couldnt retrieve auth token');
+		console.log('Fatal spotify error - Couldnt retrieve auth token. Retrying...');
 		handleSpotify();
 	});
 
 }
 
 client.login(token);
-

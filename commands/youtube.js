@@ -1,17 +1,22 @@
+async function execute(message, args) {
+    const ytdl = require('ytdl-core');
+    const { play } = require('../lib/play-youtube');
+    if (message.member.voice.channel) {
+        //play using lib/play-youtube
+        let retmsg = await play(args[0]);
+
+        //listen for play-youtube to return true (finished)
+        return new Promise(msg => {
+            if (retmsg){
+                msg('Success');
+            }else{
+                msg('Fail: '+retmsg);
+            }
+        });
+    }
+}
 module.exports = {
 	name: 'youtube',
 	description: 'plays audio through youtube to channel juan is in',
-	async execute(message, args) {
-        const ytdl = require('ytdl-core');
-        if (message.member.voice.channel) {
-            //Play youtube audio provided in args down voice dispatcher to channel
-            const voiceDispatcher = global.voiceConnection.play(ytdl(args[0], { quality: 'highestaudio', filter: 'audioonly'}));
-
-            voiceDispatcher.on('start', () => {
-                console.log('Playing youtube!');
-            });
-
-            return `Playing music!!`
-        }
-	},
+    execute,
 };

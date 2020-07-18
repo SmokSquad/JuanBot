@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'spotify',
-	description: 'query spotify for metadata',
+	description: 'manually grab and return a new spotify auth token',
 	execute(message, args){
         const request = require('request-promise');
         const { spotifyCreds } = require('../config.json');
